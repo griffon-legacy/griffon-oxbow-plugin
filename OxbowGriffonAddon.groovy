@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 the original author or authors.
+ * Copyright 2010-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,25 +14,48 @@
  * limitations under the License.
  */
 
-import griffon.oxbow.factory.*
+import java.awt.Window
+import griffon.plugins.oxbow.factory.*
 import com.ezware.dialog.task.TaskDialogs
+import com.ezware.dialog.task.CommandLink
 
 /**
  * @author Ixchel Ruiz
  */
-
 class OxbowGriffonAddon {
     def factories = [
         taskDialog: new TaskDialogFactory()
     ]
 
     def methods = [
-        ask: { String... args -> TaskDialogs.ask(*args) },
-        choice: { Object... args -> TaskDialogs.choice(*args) },
-        error: { String... args -> TaskDialogs.error(*args) },
-        inform: { String... args -> TaskDialogs.inform(*args) },
-        radioChoice: { Object... args -> TaskDialogs.radioChoice(*args) },
+        ask: { String instruction, String text ->
+            TaskDialogs.ask(getFocusedWindow(), instruction, text)
+        },
+        choice: { String instruction, String text, int defaultChoice, CommandLink... choices -> 
+            TaskDialogs.choice(getFocusedWindow(), instruction, text, defaultChoice, choices)
+        },
+        confirm: { String instruction, String text ->
+            TaskDialogs.isConfirmed(getFocusedWindow(), instruction, text)
+        },
+        error: { String instruction, String text ->
+            TaskDialogs.error(getFocusedWindow(), instruction, text)
+        },
+        inform: { String instruction, String text ->
+            TaskDialogs.inform(getFocusedWindow(), instruction, text)
+        },/*
+        input: { String instruction, String text, defaultValue ->
+            TaskDialogs.input(getFocusedWindow(), instruction, text, defaultValue)
+        },*/
+        radioChoice: { String instruction, String text, int defaultChoice, String... choices -> 
+            TaskDialogs.radioChoice(getFocusedWindow(), instruction, text, defaultChoice, choices)
+        },
         showException: { Exception args -> TaskDialogs.showException(args) },
-        warn: { String... args -> TaskDialogs.warn(*args) }
+        warn: { String instruction, String text ->
+            TaskDialogs.warn(getFocusedWindow(), instruction, text)
+        },
     ]
+    
+    private Window getFocusedWindow() {
+        Window.windows.find { it.focused == true } ?: null
+    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 the original author or authors.
+ * Copyright 2010-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,15 +19,12 @@
  */
 
 // check to see if we already have a OxbowGriffonAddon
-boolean addonIsSet1
-builderConfig.each() { prefix, v ->
-    v.each { builder, views ->
-        addonIsSet1 = addonIsSet1 || 'OxbowGriffonAddon' == builder
-    }
-}
-
-if (addonIsSet1) {
+def configText = '''root.'OxbowGriffonAddon'.addon=true'''
+if(builderConfigFile.text.contains(configText)) {
     println 'Removing OxbowGriffonAddon from Builder.groovy'
-    builderConfigFile.text -= "root.'OxbowGriffonAddon'.addon=true\n"
-    builderConfigFile.text -= "root.'OxbowGriffonAddon'.controller=['ask','choice','error','inform','showException','radioChoice','warn']\n"
+    builderConfigFile.text -= configText
+}
+configText = '''root.'OxbowGriffonAddon'.controller=['ask','confirm','choice','error','inform','input','showException','radioChoice','warn']'''
+if(builderConfigFile.text.contains(configText)) {
+    builderConfigFile.text -= configText
 }
