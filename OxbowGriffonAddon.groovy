@@ -23,11 +23,11 @@ import com.ezware.dialog.task.CommandLink
  * @author Ixchel Ruiz
  */
 class OxbowGriffonAddon {
-    def factories = [
+    Map factories = [
         taskDialog: new TaskDialogFactory()
     ]
 
-    def methods = [
+    Map methods = [
         ask: { String instruction, String text ->
             TaskDialogs.ask(getFocusedWindow(), instruction, text)
         },
@@ -54,7 +54,7 @@ class OxbowGriffonAddon {
             TaskDialogs.warn(getFocusedWindow(), instruction, text)
         },
     ]
-    
+
     private Window getFocusedWindow() {
         Window.windows.find { it.focused == true } ?: null
     }
